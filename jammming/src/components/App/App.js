@@ -5,30 +5,13 @@ import SearchBar from '../SearchBar/SearchBar';
 import SearchResults from '../SearchResults/SearchResults';
 import Playlist from '../Playlist/Playlist';
 
+import Spotify from '../../util/Spotify';
+
 class App extends React.Component{
   constructor(props) {
     super(props);
     this.state = {
-      searchResults: [
-        {
-          name: 'name1',
-          artist: 'artist',
-          album: 'album',
-          id: 1,
-        },
-        {
-          name: 'name2',
-          artist: 'artist',
-          album: 'album',
-          id: 2,
-        },
-        {
-          name: 'name3',
-          artist: 'artist',
-          album: 'album',
-          id: 3,
-        }
-      ],
+      searchResults: [],
       playlistName: 'New Playlist',
       playlistTracks: [],
     }
@@ -70,7 +53,9 @@ class App extends React.Component{
   }
 
   search(term) {
-    console.log(term);
+    this.setState({
+      searchResults: Spotify.search(term)
+    })
   }
 
   render(){
