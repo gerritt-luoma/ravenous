@@ -83,7 +83,7 @@ const Spotify = {
 
     // Get user ID for playlist calls
     let userID;
-    const response = await fetch('https://api.spotify.com/v1/me',{
+    let response = await fetch('https://api.spotify.com/v1/me',{
       headers: headers,
     });
     if(response.ok) {
@@ -99,11 +99,7 @@ const Spotify = {
     response = await fetch(`https://api.spotify.com/v1/users/${userID}/playlists`,{
       headers: headers,
       method: 'POST',
-      body: {
-        name: playlistName,
-        description: "New playlist made with Jammming",
-        public: false,
-      }
+      body: JSON.stringify({name: playlistName})
     });
     if(response.ok) {
       const responseJSON = await response.json();
@@ -113,7 +109,17 @@ const Spotify = {
       return;
     }
 
-    // TODO: Send a post request to add tracks passed in trackURIs to playlist
+    // Use a post call to add tracks to newly created playlist
+    response = await fetch(`https://api.spotify.com/v1/users/${userID}/playlists/${playlistID}/tracks`,{
+      headers: headers,
+      method: "POST",
+      body: JSON.stringify({uris: trackURIs})
+    });
+    if(response.ok) {
+      console.log('Successfully added tracks');
+    } else {
+      console.log('ERROR: Failed to add tracks to playlist');
+    }
   },
 }
 
