@@ -67,6 +67,54 @@ const Spotify = {
       return [];
     }
   },
+
+  async savePlaylist(playlistName, trackURIs) {
+    // Verify inputs are defined
+    if(!playlistName || !trackURIs) {
+      return;
+    }
+
+    // Get access token and create headers for following fetch calls
+    const access_token = Spotify.getAccessToken();
+    const headers = {
+      Authorization: `Bearer ${access_token}`,
+      'Content-Type': 'appication/json',
+    }
+
+    // Get user ID for playlist calls
+    let userID;
+    const response = await fetch('https://api.spotify.com/v1/me',{
+      headers: headers,
+    });
+    if(response.ok) {
+      const responseJSON = await response.json();
+      userID = responseJSON.id;
+    } else {
+      console.log('ERROR: Could not get user ID');
+      return;
+    }
+
+    // Create new playlist with the given name
+    let playlistID;
+    response = await fetch(`https://api.spotify.com/v1/users/${userID}/playlists`,{
+      headers: headers,
+      method: 'POST',
+      body: {
+        name: playlistName,
+        description: "New playlist made with Jammming",
+        public: false,
+      }
+    });
+    if(response.ok) {
+      const responseJSON = await response.json();
+      playlistID = responseJSON.id;
+    } else {
+      console.log('ERROR: Failed to create new playlist');
+      return;
+    }
+
+    // TODO: Send a post request to add tracks passed in trackURIs to playlist
+  },
 }
 
 export default Spotify;
