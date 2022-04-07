@@ -52,9 +52,10 @@ class App extends React.Component{
     })
   }
 
-  search(term) {
+  async search(term) {
+    const search = await Spotify.search(term);
     this.setState({
-      searchResults: Spotify.search(term)
+      searchResults: search
     })
   }
 
