@@ -99,9 +99,52 @@ function roundWinnerHelper(move1, move2, power1, power2) {
 }
 
 function getGameWinner() {
+  if(!validateMoveTypes() || !validateMoveStrenths()) {
+    return null;
+  }
+  let playerOneWins = 0;
+  let playerTwoWins = 0;
+  for(let i = 1; i < 4; i++) {
+    let result = getRoundWinner(i);
+    if(result === 'Player One') {
+      playerOneWins += 1;
+    } else if(result === 'Player Two') {
+      playerTwoWins += 1;
+    }
+  }
 
+  if(playerOneWins > playerTwoWins) {
+    return 'Player One';
+  } else if(playerTwoWins > playerOneWins) {
+    return 'Player Two';
+  } else {
+    return 'Tie';
+  }
+}
+
+function validateMoveTypes() {
+  if(!playerOneMoveOneType || !playerOneMoveTwoType || !playerOneMoveThreeType || !playerTwoMoveOneType || !playerTwoMoveTwoType || !playerTwoMoveThreeType) {
+    return false;
+  }
+  return true;
+}
+
+function validateMoveStrenths() {
+  if(!playerOneMoveOneValue || !playerOneMoveTwoValue || !playerOneMoveThreeValue || !playerTwoMoveOneValue || !playerTwoMoveTwoValue || !playerTwoMoveThreeValue) {
+    return false;
+  }
+  return true;
 }
 
 function setComputerMoves() {
+  playerTwoMoveOneType = MOVE_TYPES[Math.floor(Math.random() * MOVE_TYPES.length)];
+  playerTwoMoveTwoType = MOVE_TYPES[Math.floor(Math.random() * MOVE_TYPES.length)];
+  playerTwoMoveThreeType = MOVE_TYPES[Math.floor(Math.random() * MOVE_TYPES.length)];
 
+  // Move one cannoth have a value more than 97 since two and three cannot be less than one
+  playerTwoMoveOneValue = Math.ceil(Math.random() * 97);
+  // Move one plus move two cannot have a value more than 98 since move three cannot be less than one
+  playerTwoMoveTwoValue = Math.ceil(Math.random() * (98 - playerTwoMoveOneValue));
+  // No randomization needed, just subtract move one and move two from 99
+  playerTwoMoveThreeValue = 99 - (playerTwoMoveOneValue + playerTwoMoveTwoValue);
 }
