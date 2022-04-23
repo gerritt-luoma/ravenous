@@ -5,6 +5,7 @@ let hiHats = Array(16).fill(false);
 let rideCymbals = Array(16).fill(false);
 
 function toggleDrum(type, index) {
+  console.log(`Type: ${type}, Index: ${index}`)
   if(index < 0 || index > 15) {
     console.log(`ERROR: index ${index} is out of range`);
     return null;

@@ -138,21 +138,21 @@ describe('Beat Mix Problem Set - script.js file', () => {
       });
 
       toggleDrum('snares', 0);
-      expect(snares[0]).to.not.equal(clonedDrums[1][0]);
+      expect(snares[0]).to.not.equal(clonedDrums[0][0]);
       snares.forEach((val, index) => {
         if (index === 0) return;
         expect(val).to.be.false;
       });
 
       toggleDrum('hiHats', 0);
-      expect(hiHats[0]).to.not.equal(clonedDrums[2][0]);
+      expect(hiHats[0]).to.not.equal(clonedDrums[0][0]);
       hiHats.forEach((val, index) => {
         if (index === 0) return;
         expect(val).to.be.false;
       });
 
       toggleDrum('rideCymbals', 0);
-      expect(rideCymbals[0]).to.not.equal(clonedDrums[3][0]);
+      expect(rideCymbals[0]).to.not.equal(clonedDrums[0][0]);
       rideCymbals.forEach((val, index) => {
         if (index === 0) return;
         expect(val).to.be.false;
