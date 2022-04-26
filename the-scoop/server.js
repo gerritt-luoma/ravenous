@@ -37,10 +37,10 @@ const routes = {
     'DELETE': deleteComment
   },
   '/comments/:id/upvote': {
-
+    'PUT': upvoteComment
   },
   '/comments/:id/downvote': {
-
+    'PUT': downvoteComment
   }
 };
 
@@ -317,6 +317,38 @@ function deleteComment(url, request) {
     response.status = 204;
   } else {
     response.status = 404;
+  }
+  return response;
+}
+
+function upvoteComment(url, request) {
+  const id = Number(url.split('/').filter(segment => segment)[1]);
+  const savedComment = database.comments[id];
+  const userName = request.body && request.body.username;
+  const response = {};
+  if(savedComment && database.users[userName]) {
+    upvote(savedComment, userName);
+
+    response.body = { comment: savedComment };
+    response.status = 200;
+  } else {
+    response.status = 400;
+  }
+  return response;
+}
+
+function downvoteComment(url, request) {
+  const id = Number(url.split('/').filter(segment => segment)[1]);
+  const savedComment = database.comments[id];
+  const userName = request.body && request.body.username;
+  const response = {};
+  if(savedComment && database.users[userName]) {
+    downvote(savedComment, userName);
+
+    response.body = { comment: savedComment };
+    response.status = 200;
+  } else {
+    response.status = 400;
   }
   return response;
 }
