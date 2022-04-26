@@ -33,7 +33,8 @@ const routes = {
     'POST': createComment
   },
   '/comments/:id': {
-    'PUT': updateComment
+    'PUT': updateComment,
+    'DELETE': deleteComment
   },
   '/comments/:id/upvote': {
 
@@ -303,9 +304,27 @@ function updateComment(url, request) {
   return response;
 }
 
+function deleteComment(url, request) {
+  const id = Number(url.split('/').filter(segment => segment)[1]);
+  const savedComment = database.comments[id];
+  const response = {};
+  if(savedComment) {
+    database.comments[id] = null;
+    const userCommentIds = database.users[savedComment.username].commentIds;
+    userCommentIds.splice(userCommentIds.indexOf(id), 1);
+    const articleCommentIds = database.articles[savedComment.articleId].commentIds;
+    articleCommentIds.splice(articleCommentIds.indexOf(id), 1);
+    response.status = 204;
+  } else {
+    response.status = 404;
+  }
+  return response;
+}
+
 // Write all code above this line.
 
 const http = require('http');
+const { data } = require('react/lib/ReactDOMFactories');
 const url = require('url');
 
 const port = process.env.PORT || 4000;
