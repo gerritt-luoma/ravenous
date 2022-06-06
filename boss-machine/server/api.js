@@ -27,15 +27,34 @@ apiRouter.get('/minions', (req, res, next) => {
   res.status(200).send(minions);
 });
 
-apiRouter.post('/minions');
+apiRouter.post('/minions', (req, res, next) => {
+  const { name, title, salary } = req.body;
+  const newMinion = db.addToDatabase('minions', { name, title, salary });
+  if(newMinion === null) {
+    res.status(204).send();
+  } else {
+    res.status(201).send(newMinion);
+  }
+  
+});
 
 apiRouter.get('/minions/:minionId', (req, res, next) => {
   res.status(200).send(req.minion);
 });
 
-apiRouter.put('/minions/:minionId');
+apiRouter.put('/minions/:minionId', (req, res, next) => {
+  const updatedMinion = db.updateInstanceInDatabase('minions', req.body);
+  res.status(200).send(updatedMinion);
+});
 
-apiRouter.delete('/minions/:minionId');
+apiRouter.delete('/minions/:minionId', (req, res, next) => {
+  const result = db.deleteFromDatabasebyId('minions', req.minion.id);
+  if(result) {
+    res.status(204).send();
+  } else {
+    res.status(500).send();
+  }
+});
 
 /* 
   Idea Routes
@@ -46,15 +65,54 @@ apiRouter.delete('/minions/:minionId');
   numWeeks: number
   weeklyRevenue: number  
 */
-apiRouter.get('/ideas');
+apiRouter.param('ideaId', (req, res, next, id) => {
+  const ideaId = id;
+  const idea = db.getFromDatabaseById('ideas', ideaId);
+  if(!idea) {
+    res.status(404).send();
+  } else {
+    req.idea = idea;
+    next();
+  }
+})
 
-apiRouter.post('/ideas');
+apiRouter.get('/ideas', (req, res, next) => {
+  const ideas = db.getAllFromDatabase('ideas');
+  res.status(200).send(ideas);
+});
 
-apiRouter.get('/ideas:ideaId');
+apiRouter.post('/ideas', (req, res, next) => {
+  const newIdea = db.addToDatabase('ideas', req.body);
+  if(newIdea) {
+    res.status(201).send(newIdea);
+  } else {
+    // not sure about this code
+    req.status(400).send();
+  }
+});
 
-apiRouter.put('/ideas:ideaId');
+apiRouter.get('/ideas/:ideaId', (req, res, next) => {
+  res.status(200).send(req.idea);
+});
 
-apiRouter.delete('/ideas:ideaId');
+apiRouter.put('/ideas/:ideaId', (req, res, next) => {
+  const updatedIdea = db.updateInstanceInDatabase('ideas', req.body);
+  if(updatedIdea) {
+    res.status(201).send(updatedIdea);
+  } else {
+    // not sure about this code
+    res.status(400).send();
+  }
+});
+
+apiRouter.delete('/ideas/:ideaId', (req, res, next) => {
+  const result = db.deleteFromDatabasebyId('ideas', req.idea.id);
+  if(result) {
+    res.status(204).send();
+  } else {
+    res.status(500);
+  }
+});
 
 /*
   Meetings Routes
