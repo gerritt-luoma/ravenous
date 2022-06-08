@@ -1,5 +1,4 @@
 const checkMillionDollarIdea = (req, res, next) => {
-  console.log(`${req.body.numWeeks} : ${req.body.weeklyRevenue}`)
   if(req.body.numWeeks * req.body.weeklyRevenue >= 1000000) {
     next();
   } else {
