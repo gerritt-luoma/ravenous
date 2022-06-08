@@ -125,10 +125,28 @@ apiRouter.delete('/ideas/:ideaId', (req, res, next) => {
   day: string
   note: string
 */
-apiRouter.get('/meetings');
+apiRouter.get('/meetings', (req, res, next) => {
+  const meetings = db.getAllFromDatabase('meetings');
+  res.status(200).send(meetings);
+});
 
-apiRouter.post('/meetings');
+apiRouter.post('/meetings', (req, res, next) => {
+  const newMeeting = db.addToDatabase('meetings', req.body);
+  console.log(newMeeting);
+  if(newMeeting) {
+    res.status(201).send(newMeeting);
+  } else {
+    res.status(400).send();
+  }
+});
 
-apiRouter.delete('/meetings');
+apiRouter.delete('/meetings', (req, res, next) => {
+  const result = db.deleteAllFromDatabase('meetings');
+  if(!result) {
+    res.status(400).send();
+  } else {
+    res.status(204).send();
+  }
+});
 
 module.exports = apiRouter;

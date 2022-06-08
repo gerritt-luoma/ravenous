@@ -1,4 +1,5 @@
 const expect = require('chai').expect;
+const faker = require('faker');
 const request = require('supertest');
 
 const app = require('../server');
@@ -613,8 +614,15 @@ describe('/api/meetings routes', function() {
   describe('POST /api/meetings', function() {
   
     it('should create a new meetings and return it', function() {
+      const date = new Date(faker.date.future());
       return request(app)
         .post('/api/meetings')
+        .send({
+          time: date.toTimeString().slice(0, 5),
+          date: date,
+          day: date.toDateString(),
+          note: 'They forgot to send data for this test'
+        })
         .expect(201)
         .then((response) => response.body)
         .then((createdMeeting) => {
@@ -628,6 +636,7 @@ describe('/api/meetings routes', function() {
     it('should persist the created meeting to the database', function() {
       let initialMeetingsArray;
       let newlyCreatedMeeting;
+      const date = new Date(faker.date.future());
       return request(app)
         .get('/api/meetings')
         .then((response) => {
@@ -636,6 +645,12 @@ describe('/api/meetings routes', function() {
         .then(() => {
           return request(app)
             .post('/api/meetings')
+            .send({
+              time: date.toTimeString().slice(0, 5),
+              date: date,
+              day: date.toDateString(),
+              note: 'They forgot to send data for this test'
+            })
             .expect(201);
         })
         .then((response) => response.body)
