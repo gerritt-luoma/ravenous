@@ -1,7 +1,8 @@
 const express = require('express');
 const app = require('../server');
 const apiRouter = express.Router();
-const db = require('./db')
+const db = require('./db');
+const checkMillionDollarIdea = require('./checkMillionDollarIdea');
 
 /* 
   Minion Routes 
@@ -80,6 +81,8 @@ apiRouter.get('/ideas', (req, res, next) => {
   const ideas = db.getAllFromDatabase('ideas');
   res.status(200).send(ideas);
 });
+
+apiRouter.post('/ideas', checkMillionDollarIdea);
 
 apiRouter.post('/ideas', (req, res, next) => {
   const newIdea = db.addToDatabase('ideas', req.body);
