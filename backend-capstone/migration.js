@@ -14,5 +14,17 @@ db.serialize(() => {
         if(error) {
             console.error(error);
         }
+    });
+
+    db.run("DROP TABLE IF EXISTS Series", error => {
+        if(error) {
+            console.error(error);
+        }
+    });
+
+    db.run("CREATE TABLE Series (id INTEGER NOT NULL, name TEXT NOT NULL, description TEXT NOT NULL, PRIMARY KEY('id'))", error => {
+        if(error) {
+            console.error(error);
+        }
     })
 })
