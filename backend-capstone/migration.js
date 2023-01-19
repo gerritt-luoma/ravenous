@@ -26,5 +26,17 @@ db.serialize(() => {
         if(error) {
             console.error(error);
         }
+    });
+
+    db.run("DROP TABLE IF EXISTS Issue", error => {
+        if(error) {
+            console.error(error);
+        }
+    });
+
+    db.run("CREATE TABLE Issue (id INTEGER NOT NULL, name TEXT NOT NULL, issue_number INTEGER NOT NULL, publication_date TEXT NOT NULL, artist_id INTEGER NOT NULL, series_id INTEGER NOT NULL, PRIMARY KEY(id), FOREIGN KEY(artist_id) REFERENCES Artist(id), FOREIGN KEY(series_id) REFERENCES Series(id))", error => {
+        if(error) {
+            console.error(error);
+        }
     })
 })
